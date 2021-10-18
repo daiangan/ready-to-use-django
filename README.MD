@@ -1,1 +1,1 @@
-#### Ready to use Django template.
+## Ready to use Django template.
