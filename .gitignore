@@ -11,6 +11,7 @@ temp_files/
 secret_files/
 utils/management/
 settings/local.py
+settings/dev.py
 
 # Backup files #
 *.bak
