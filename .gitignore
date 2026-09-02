@@ -4,20 +4,16 @@
 *.pyc
 __pycache__
 db.sqlite3
-media
+deployment-check.sqlite3
+media/
 
 # Project #
 temp_files/
 secret_files/
-utils/management/
 settings/local.py
-settings/dev.py
 
 # Backup files #
 *.bak
-
-# Databases #
-settings/databases.py
 
 # If you are using PyCharm #
 .idea/
@@ -65,9 +61,6 @@ coverage.xml
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# pyenv
-.python-version
-
 # celery
 celerybeat-schedule.*
 
@@ -82,6 +75,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Generated static files #
+staticfiles/
+schema.yml
 
 # mkdocs documentation
 /site
