@@ -1,18 +1,14 @@
-from django.conf import settings
 from django.urls import path
-from django.views.generic import TemplateView
-from rest_framework.schemas import get_schema_view
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+from api.views import health_check
 
 urlpatterns = [
-
-    # Swagger Documentation
-    path('openapi/', get_schema_view(
-        title="Project API",
-        description="API documentation",
-        version=settings.API_VERSION,
-    ), name='openapi-schema'),
-    path('doc/', TemplateView.as_view(
-        template_name='api/swagger-ui.html',
-        extra_context={'schema_url': 'openapi-schema'}
-    ), name='swagger-ui'),
+    path("health/", health_check, name="health-check"),
+    path("openapi/", SpectacularAPIView.as_view(), name="openapi-schema"),
+    path(
+        "doc/",
+        SpectacularSwaggerView.as_view(url_name="openapi-schema"),
+        name="swagger-ui",
+    ),
 ]

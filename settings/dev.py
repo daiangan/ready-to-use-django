@@ -1,18 +1,15 @@
-from settings.base import *
-from settings import databases
+"""Local development settings."""
+
+from settings.base import *  # noqa: F403
 
 DEBUG = True
-
-ALLOWED_HOSTS = [
-    '*',
-]
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+MIDDLEWARE.remove("whitenoise.middleware.WhiteNoiseMiddleware")  # noqa: F405
+ALLOWED_HOSTS = env_list(  # noqa: F405
+    "DJANGO_ALLOWED_HOSTS",
+    "localhost,127.0.0.1,[::1]",
 )
 
-DATABASES = databases.DEV
+# Convenient for separate local frontends. Production always uses an allowlist.
+CORS_ALLOW_ALL_ORIGINS = env_bool("DJANGO_CORS_ALLOW_ALL", True)  # noqa: F405
 
-REST_FRAMEWORK['DEFAULT_PERMISSION_CLASSES'] = [
-    'rest_framework.permissions.AllowAny'
-]
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

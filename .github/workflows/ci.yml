@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.13", "3.14"]
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -r requirements-lock.txt
+      - name: Lint
+        run: ruff check .
+      - name: Check migrations
+        run: python manage.py makemigrations --check --dry-run
+      - name: Run tests
+        run: coverage run manage.py test
+      - name: Check coverage
+        run: coverage report
+      - name: Validate OpenAPI schema
+        run: python manage.py spectacular --file schema.yml --validate
+      - name: Check production settings
+        env:
+          DJANGO_SETTINGS_MODULE: settings.prod
+          DJANGO_SECRET_KEY: deployment-check-only-long-random-placeholder-1234567890
+          DJANGO_ALLOWED_HOSTS: example.com
+          DATABASE_URL: sqlite:///deployment-check.sqlite3
+          DJANGO_SECURE_HSTS_PRELOAD: "true"
+        run: python manage.py check --deploy
